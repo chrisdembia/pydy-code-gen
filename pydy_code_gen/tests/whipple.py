@@ -389,18 +389,23 @@ for k, bv in basu_output.items():
 
 # Try with lambdify
 
-from benchmark_functions import numeric_right_hand_side
+from pydy_code_gen.code import numeric_right_hand_side
 parameters = constant_substitutions.keys()
-parameters.sort()
+#parameters.sort()
+mass_matrix = kane.mass_matrix_full
+forcing_vector = kane.forcing_full
+coordinates = kane._q
+speeds = kane._u
 print('Generating a numeric right hand side function.')
-rhs = numeric_right_hand_side(kane, parameters, specified=[T4, T6, T7],
+rhs = numeric_right_hand_side(mass_matrix, forcing_vector, parameters,
+        coordinates, speeds, specified=[T4, T6, T7],
         generator="lambdify")
 state_values = []
 for state in kane._q + kane._u:
     state_values.append(substitutions[state])
-parameter_values = [0.0, 0.0, 0.0] + [constant_substitutions[k] for k in sorted(constant_substitutions.keys())]
+parameter_values = [0.0, 0.0, 0.0] + [constant_substitutions[k] for k in constant_substitutions.keys()]
 print('Evaluating the right hand side.')
-xd = rhs(state_values, 0.0, parameter_values)
+xd = rhs(state_values, 0.0, {'constants': constant_substitutions, 'specified': [0.0, 0.0, 0.0], 'num_coordinates': 4})
 
 # yaw rate, and wheel contact diff equations
 # kinetic and potential energy, and energy

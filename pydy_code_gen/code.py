@@ -182,6 +182,7 @@ class CythonGenerator(object):
         for exp_type, expression_list in self.expressions.items():
             c_lines = []
             for i, exp in enumerate(expression_list):
+                print exp
                 if exp_type == 'common_sub':
                     code_str = self.PyDyCCodePrinter().doprint(exp[1])
                     c_lines.append('double {} = {};'.format(str(exp[0]),
@@ -258,8 +259,7 @@ class CythonGenerator(object):
 
         # This prevents output to stdout and waits till it is done.
         p = subprocess.Popen(['python', self.setup_py_filename, 'build_ext',
-                              '--inplace'], stderr=subprocess.STDOUT,
-                             stdout=subprocess.PIPE)
+                              '--inplace'])
         p.wait()
 
     def generate_extension(self):
