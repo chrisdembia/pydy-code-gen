@@ -399,7 +399,7 @@ speeds = kane._u
 print('Generating a numeric right hand side function.')
 rhs = numeric_right_hand_side(mass_matrix, forcing_vector, parameters,
         coordinates, speeds, specified=[T4, T6, T7],
-        generator="lambdify")
+        generator="cython")
 state_values = []
 for state in kane._q + kane._u:
     state_values.append(substitutions[state])
